@@ -22,9 +22,14 @@ export const QUERY = gql`
     me {
       player {
         __typename
+        playbackState {
+          ...PlayControlCell_playbackState
+        }
       }
     }
   }
+
+  ${PlayControlCell.fragments.playbackState}
 `
 
 export const beforeQuery = (variables: PlaybarQueryVariables) => {
@@ -49,7 +54,7 @@ export const Loading = () => (
 export const Empty = () => null
 
 export const Success = ({
-  me: _me,
+  me,
 }: CellSuccessProps<PlaybarQuery, PlaybarQueryVariables>) => {
   return (
     <footer className="flex flex-col [grid-area:playbar]">
@@ -59,7 +64,7 @@ export const Success = ({
           <div className="flex items-center justify-center gap-5">
             <ShuffleControlCell />
             <SkipToPreviousControl />
-            <PlayControlCell />
+            <PlayControlCell playbackState={me.player.playbackState} />
             <SkipToNextControl />
             <RepeatControlCell />
           </div>
