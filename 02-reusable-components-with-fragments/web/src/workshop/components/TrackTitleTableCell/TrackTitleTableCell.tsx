@@ -6,6 +6,7 @@ import ExplicitBadge from 'src/components/ExplicitBadge'
 import TableCell from 'src/components/TableCell'
 
 interface Track {
+  explicit: any
   name: string
   album?: {
     images: Array<{ url: string }>
@@ -22,7 +23,7 @@ const TrackTitleTableCell = ({
   includeCoverPhoto = true,
   track,
 }: TrackTitleTableCellProps) => {
-  const explicit = false
+  const explicit = track.explicit
 
   return (
     <TableCell>
@@ -58,6 +59,24 @@ const TrackTitleTableCell = ({
       </div>
     </TableCell>
   )
+}
+
+TrackTitleTableCell.fragments = {
+  track: gql`
+    fragment TrackTitleTableCell_track on Track {
+      name
+      explicit
+      album {
+        images {
+          url
+        }
+      }
+      artists {
+        id
+        name
+      }
+    }
+  `,
 }
 
 export default TrackTitleTableCell

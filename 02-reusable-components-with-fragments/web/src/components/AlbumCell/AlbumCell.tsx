@@ -61,6 +61,7 @@ export const QUERY = gql`
         }
         edges {
           node {
+            ...TrackTitleTableCell_track
             id
             durationMs
             name
@@ -74,6 +75,7 @@ export const QUERY = gql`
       }
     }
   }
+  ${TrackTitleTableCell.fragments.track}
 `
 
 export const beforeQuery = (variables: FindAlbumQueryVariables) => {
