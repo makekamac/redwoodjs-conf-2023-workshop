@@ -1,3 +1,7 @@
 import type { TypePolicies } from '@apollo/client'
 
-export const typePolicies: TypePolicies = {}
+export const typePolicies: TypePolicies = {
+  PlaybackState: {
+    keyFields: [],
+  },
+}

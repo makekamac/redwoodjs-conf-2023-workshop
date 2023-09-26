@@ -7,6 +7,8 @@ import CoverPhoto from 'src/components/CoverPhoto'
 import DelimitedList from 'src/components/DelimitedList'
 import ExplicitBadge from 'src/components/ExplicitBadge'
 import TableCell from 'src/components/TableCell'
+import { useFragment } from '@apollo/client'
+import { PLAYBACK_STATE_FRAGMENT } from '../SidebarPlaylistItem'
 
 interface TrackTitleTableCellProps {
   includeCoverPhoto?: boolean
@@ -17,7 +19,11 @@ const TrackTitleTableCell = ({
   includeCoverPhoto = true,
   track,
 }: TrackTitleTableCellProps) => {
-  const isCurrentTrack = false
+  const { data: playbackState } = useFragment({
+    fragment: PLAYBACK_STATE_FRAGMENT,
+    from: { __typename: 'PlaybackState' },
+  })
+  const isCurrentTrack = playbackState?.track?.id === track?.id ?? false
 
   return (
     <TableCell>

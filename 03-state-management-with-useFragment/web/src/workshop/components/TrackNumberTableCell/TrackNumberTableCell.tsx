@@ -1,5 +1,7 @@
 import AnimatedSoundWave from 'src/components/AnimatedSoundWave'
 import TableCell from 'src/components/TableCell'
+import { useFragment } from '@apollo/client'
+import { PLAYBACK_STATE_FRAGMENT } from '../SidebarPlaylistItem'
 
 interface TrackNumberTableCellProps {
   position: number
@@ -11,8 +13,13 @@ const TrackNumberTableCell = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   trackId,
 }: TrackNumberTableCellProps) => {
-  const isPlaying = false
-  const isCurrentTrack = false
+  const { data: playbackState } = useFragment({
+    fragment: PLAYBACK_STATE_FRAGMENT,
+    from: { __typename: 'PlaybackState' },
+  })
+
+  const isPlaying = playbackState?.isPlaying ?? false
+  const isCurrentTrack = playbackState?.track?.id === trackId ?? false
   const isCurrentlyPlaying = isCurrentTrack && isPlaying
 
   return (

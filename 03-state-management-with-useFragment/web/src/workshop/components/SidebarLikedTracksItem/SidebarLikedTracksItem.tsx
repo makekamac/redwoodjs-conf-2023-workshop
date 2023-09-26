@@ -1,5 +1,6 @@
 import { Pin, Volume2 } from 'lucide-react'
 
+import { useFragment } from '@apollo/client'
 import { routes } from '@redwoodjs/router'
 
 import DelimitedList from 'src/components/DelimitedList'
@@ -7,13 +8,19 @@ import LikedTracksCoverPhoto from 'src/components/LikedTracksCoverPhoto'
 import SidebarPlaylistContent from 'src/components/SidebarPlaylistContent'
 import SidebarPlaylistLink from 'src/components/SidebarPlaylistLink'
 import SidebarPlaylistName from 'src/components/SidebarPlaylistName'
+import { PLAYBACK_STATE_FRAGMENT } from '../SidebarPlaylistItem'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LIKED_TRACKS_URI = 'collection:tracks'
 
 const SidebarLikedTracksItem = () => {
-  const isPlaying = false
-  const isCurrentContext = false
+  const { data: playbackState } = useFragment({
+    fragment: PLAYBACK_STATE_FRAGMENT,
+    from: { __typename: 'PlaybackState' },
+  })
+
+  const isPlaying = playbackState?.isPlaying ?? false
+  const isCurrentContext = playbackState?.context?.uri ?? false
 
   return (
     <SidebarPlaylistLink to={routes.likedTracks()}>

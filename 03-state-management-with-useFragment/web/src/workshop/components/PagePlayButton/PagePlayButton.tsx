@@ -1,6 +1,9 @@
+import { useFragment } from '@apollo/client'
+
 import PlayButton from 'src/components/PlayButton'
 import { usePausePlaybackMutation } from 'src/mutations/usePausePlaybackMutation'
 import { useResumePlaybackMutation } from 'src/mutations/useResumePlaybackMutation'
+import { PLAYBACK_STATE_FRAGMENT } from '../SidebarPlaylistItem'
 
 interface PagePlayButtonProps {
   disabled?: boolean
@@ -10,8 +13,14 @@ interface PagePlayButtonProps {
 const PagePlayButton = ({ disabled, contextUri }: PagePlayButtonProps) => {
   const pausePlayback = usePausePlaybackMutation()
   const resumePlayback = useResumePlaybackMutation()
-  const isPlaying = false
-  const isCurrentContext = false
+
+  const { data: playbackState } = useFragment({
+    fragment: PLAYBACK_STATE_FRAGMENT,
+    from: { __typename: 'PlaybackState' },
+  })
+
+  const isPlaying = playbackState?.isPlaying ?? false
+  const isCurrentContext = playbackState?.context?.uri ?? false
   const isPlayingInContext = isPlaying && isCurrentContext
 
   return (

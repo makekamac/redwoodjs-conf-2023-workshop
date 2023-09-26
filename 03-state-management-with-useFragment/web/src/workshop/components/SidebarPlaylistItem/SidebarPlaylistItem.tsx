@@ -1,7 +1,11 @@
 import { Volume2 } from 'lucide-react'
-import { SidebarPlaylistItem_playlist } from 'types/graphql'
+import {
+  SidebarPlaylistItem_playbackState,
+  SidebarPlaylistItem_playlist,
+} from 'types/graphql'
 
 import { routes } from '@redwoodjs/router'
+import { useFragment } from '@apollo/client'
 
 import CoverPhoto from 'src/components/CoverPhoto'
 import DelimitedList from 'src/components/DelimitedList'
@@ -13,9 +17,28 @@ interface SidebarPlaylistItemProps {
   playlist: SidebarPlaylistItem_playlist
 }
 
+export const PLAYBACK_STATE_FRAGMENT = gql`
+  fragment SidebarPlaylistItem_playbackState on PlaybackState {
+    isPlaying
+    context {
+      uri
+    }
+    track {
+      id
+    }
+  }
+`
+
 const SidebarPlaylistItem = ({ playlist }: SidebarPlaylistItemProps) => {
-  const isPlaying = false
-  const isCurrentContext = false
+  const { data: playbackState } =
+    useFragment<SidebarPlaylistItem_playbackState>({
+      fragment: PLAYBACK_STATE_FRAGMENT,
+      from: { __typename: 'PlaybackState' },
+    })
+
+  console.log('ekam playlist', playlist, playbackState)
+  const isPlaying = playbackState?.isPlaying ?? false
+  const isCurrentContext = playbackState?.context?.uri ?? false
 
   return (
     <SidebarPlaylistLink to={routes.playlist({ id: playlist.id })}>
@@ -45,6 +68,7 @@ SidebarPlaylistItem.fragments = {
     fragment SidebarPlaylistItem_playlist on Playlist {
       id
       name
+      uri
       images {
         url
       }
