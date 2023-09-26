@@ -1,10 +1,10 @@
 [user]
 # Add the name you want displayed in various areas of the Spotify app
-displayName = 'RedwoodConf Attendee'
+displayName = 'Ekam Singh'
 
 # Customize the device shown in the UI
 [device]
-name = "My Computer"
+name = "My Mac"
 
 # valid types: 'computer', 'smartphone', 'speaker'
 type = 'computer'
